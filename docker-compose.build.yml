@@ -1,0 +1,12 @@
+services:
+  main:
+    image: "${MAIN_TAG:-local}-build-f365-main-website"
+    build:
+      context: ./f365-main-website
+
+  api:
+    image: "${MAIN_TAG:-local}-build-f365-api-server"
+    build:
+      context: ./f365-api-server
+      args:
+        - NODE_ENV=production

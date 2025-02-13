@@ -1,0 +1,52 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+#package-lock.json
+yarn.lock
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Build files
+dist/
+build/
+
+# Database (if using SQLite with Prisma)
+prisma/dev.db
+prisma/dev.db-journal
+prisma/migrations/
+
+# Apollo Server Cache (if enabled)
+.cache/
+.apollo-cache/
+
+# VSCode & IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Jest & Testing
+coverage/
+jest/
+*.test.js.snap
+.nyc_output/
+
+# Docker
+docker-compose.override.yml
+#.dockerignore

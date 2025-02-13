@@ -1,0 +1,36 @@
+services:
+  main:
+    build:
+      context: ./f365-main-website
+      target: dev
+    restart: always
+    volumes:
+      - ./f365-main-website:/var/www/html
+    working_dir: /var/www/html
+    command: |
+      bash -c "composer install --no-interaction --optimize-autoloader && php-fpm"
+
+  nginx:
+    image: nginx:1.27.4-alpine
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./f365-main-website:/var/www/html
+      - ./f365-main-website/nginx-default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - main
+
+  api:
+    build:
+      context: ./f365-api-server
+      target: dev
+      args:
+        - NODE_ENV=dev
+    volumes:
+      - ./f365-api-server:/app
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    command: |
+      sh -c "npm install --force && npm run dev:watch"
