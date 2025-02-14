@@ -32,8 +32,8 @@ echo "Pulling latest Docker images..."
 docker compose pull
 
 echo "Building and starting Docker containers..."
-docker compose build main nginx api
-docker compose up -d main nginx api
+docker compose build main nginx api db
+docker compose up -d main nginx api db
 
 echo "Showing running containers..."
 docker ps
