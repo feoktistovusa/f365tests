@@ -8,7 +8,7 @@ services:
       - ./f365-main-website:/var/www/html
     working_dir: /var/www/html
     command: |
-      bash -c "composer install --no-interaction --optimize-autoloader && php-fpm"
+      bash -c "composer install --no-interaction --optimize-autoloader && php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing && php-fpm"
 
   nginx:
     image: nginx:1.27.4-alpine
@@ -39,7 +39,6 @@ services:
     image: mysql:8.4.4
     restart: always
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
       MYSQL_USER: ${MYSQL_USER:-app}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ChangeMe}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
@@ -51,7 +50,8 @@ services:
       retries: 5
       start_period: 60s
     volumes:
-      - database_data:/var/lib/mysql:rw
+      - db_data:/var/lib/mysql:rw
+      - ./build/db/init:/docker-entrypoint-initdb.d
 
 volumes:
-  database_data:
+  db_data:
