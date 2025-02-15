@@ -1,6 +1,7 @@
 import { AppDataSource } from "../config/data-source";
 import { Booking } from "../entities/Booking";
 import { GraphQLScalarType, Kind } from "graphql";
+import axios from "axios";
 
 const bookingRepository = AppDataSource.getRepository(Booking);
 
@@ -69,6 +70,37 @@ export const resolvers = {
           }
         : errorResponse("No bookings found for the given date.");
     },
+
+    async patientById(_: any, { id }: { id: number }) {
+      const MAIN_SERVER = process.env.MAIN_SERVER || 'http://nginx';
+
+      try {
+        const response = await axios.get(`${MAIN_SERVER}/api/patients/${id}`);
+        const patient = response.data;
+
+        return {
+          success: true,
+          message: "Patient found.",
+          data: {
+            id: patient.id,
+            title: patient.title,
+            firstName: patient.firstName,
+            lastName: patient.lastName,
+            dob: patient.dob,
+            createdAt: patient.createdAt,
+            updatedAt: patient.updatedAt,
+          },
+        };
+      } catch (error) {
+        console.log(error)
+        if (axios.isAxiosError(error)) {
+          return error.response && error.response.status === 404
+            ? errorResponse("Patient not found.")
+            : errorResponse("Failed to fetch patient data.");
+        }
+        return errorResponse("An unexpected error occurred.");
+      }
+    }
   },
 
   Mutation: {

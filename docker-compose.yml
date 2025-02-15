@@ -29,6 +29,8 @@ services:
       target: dev
       args:
         - NODE_ENV=dev
+    environment:
+      - MAIN_SERVER=${MAIN_SERVER:-http://nginx}
     restart: always
     volumes:
       - ./f365-api-server:/app

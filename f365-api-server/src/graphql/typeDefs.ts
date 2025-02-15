@@ -13,9 +13,20 @@ export const typeDefs = gql`
     deleted: Boolean!
   }
 
+  type Patient {
+      id: ID!
+      title: String!
+      firstName: String!
+      lastName: String!
+      dob: Date!
+      createdAt: Date!
+      updatedAt: Date!
+  }
+
   type Query {
     bookingById(id: ID!): BookingResponse!
     bookingsByDate(date: Date!): BookingsResponse!
+    patientById(id: ID!): PatientResponse!
   }
 
   type Mutation {
@@ -55,5 +66,11 @@ export const typeDefs = gql`
   type DeleteBookingResponse {
     success: Boolean!
     message: String!
+  }
+  
+  type PatientResponse {
+      success: Boolean!
+      message: String!
+      data: Patient
   }
 `;
