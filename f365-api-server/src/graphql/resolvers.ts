@@ -1,12 +1,13 @@
-import { AppDataSource } from "../config/data-source";
-import { Booking } from "../entities/Booking";
-import { GraphQLScalarType, Kind } from "graphql";
+import {AppDataSource} from "../config/data-source";
+import {Booking} from "../entities/Booking";
+import {GraphQLScalarType, Kind} from "graphql";
 import axios from "axios";
+import { Between } from "typeorm";
 
 const bookingRepository = AppDataSource.getRepository(Booking);
 
 // Helper function for date validation
-const isValidDate = (date: string) => /^\d{4}-\d{2}-\d{2}$/.test(date);
+const isValidDate = (date: string) => /^\d{4}-\d{2}-\d{2}/.test(date);
 
 // Standardized error response
 const errorResponse = (message: string) => ({
@@ -225,6 +226,30 @@ export const resolvers = {
         success: true,
         message: `Booking with ID ${id} has been soft deleted.`,
       };
+    },
+  },
+
+  Patient: {
+    async bookings(patient: any, { start, end }: { start: string; end: string }) {
+
+      if (!isValidDate(start) || !isValidDate(end)) {
+        return [];
+      }
+
+      const fullName = `${patient.title} ${patient.firstName} ${patient.lastName}`.trim();
+
+      try {
+        return await bookingRepository.find({
+          where: {
+            patientFullName: fullName,
+            date: Between(start, end),
+            deleted: false,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+        return [];
+      }
     },
   },
 };

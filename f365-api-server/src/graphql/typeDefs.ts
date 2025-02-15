@@ -19,8 +19,13 @@ export const typeDefs = gql`
       firstName: String!
       lastName: String!
       dob: Date!
+      bookings(
+          start: Date!
+          end: Date!
+      ): [Booking]
       createdAt: Date!
       updatedAt: Date!
+      onHold: Boolean
   }
 
   type Query {
