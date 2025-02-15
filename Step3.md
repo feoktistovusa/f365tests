@@ -1,15 +1,15 @@
-# Step 2
+# Step 3
 
 Up:
 
 ```shell
-./run-step-2.sh
+./run-step-3.sh
 ```
 
 Down:
 
 ```shell
-./run-step-2.sh down
+./run-step-3.sh down
 ```
 
 ## Api server
