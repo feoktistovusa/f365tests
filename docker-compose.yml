@@ -7,6 +7,8 @@ services:
     volumes:
       - ./f365-main-website:/var/www/html
     working_dir: /var/www/html
+    depends_on:
+      - db
     command: |
       bash -c "composer install --no-interaction --optimize-autoloader && php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing && php-fpm"
 
@@ -27,13 +29,18 @@ services:
       target: dev
       args:
         - NODE_ENV=dev
+    restart: always
     volumes:
       - ./f365-api-server:/app
     ports:
       - "3000:3000"
+    depends_on:
+      - db
     working_dir: /app
     command: |
-      sh -c "npm install --force && npm run dev:watch"
+      sh -c "npm install --force && npm run db:migrate && npm run dev:watch"
+#    command: |
+#      sh -c "tail -f /dev/null"
 
   db:
     image: mysql:8.4.4
